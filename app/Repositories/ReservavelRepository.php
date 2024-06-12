@@ -5,7 +5,7 @@ namespace App\Repositories;
 use App\Models\Reservavel;
 use App\Repositories\Repository;
 
-class ReservaveisRepository implements Repository
+class ReservavelRepository implements Repository
 {
     protected $model;
 
@@ -49,7 +49,7 @@ class ReservaveisRepository implements Repository
         return $this->model->where($column, $value)->get()->first();
     }
 
-    public function save(Reservavel $newReservavel)
+    public function save($newReservavel)
     {
         try {
             return $newReservavel->save();
