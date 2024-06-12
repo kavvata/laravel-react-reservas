@@ -2,16 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\Repository;
+use App\Repositories\ReservavelRepository;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ReservavelController extends Controller
 {
+    protected Repository $repository;
+
+    function __construct()
+    {
+        $this->repository = new ReservavelRepository;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        return Inertia::render('Dashboard', [$this->repository->selectAll()]);
     }
 
     /**
