@@ -21,7 +21,9 @@ class ReservavelController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Dashboard', [$this->repository->selectAll()]);
+        $reservaveis = json_encode($this->repository->selectAll());
+        /* nome do prop no react => variavel no laravel */
+        return Inertia::render('Reservaveis/Index', ['controllerData' => $reservaveis]);
     }
 
     /**
