@@ -1,9 +1,22 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { PageProps } from '@/types';
-import ReservaveisList from '@/Components/ReservaveisList';
+import { ReactNode } from 'react';
 
 export default function Reservaveis({ auth, listaReservaveis }: PageProps<{ listaReservaveis: string }>) {
+    const reservaveis: any[] = JSON.parse(listaReservaveis);
+    const reservaveisElementList: ReactNode[] = [];
+
+    reservaveis.forEach((reservavel) => {
+        reservaveisElementList.push(
+            <li>
+                <Link href={route('reservaveis.show', reservavel.id)}>
+                    {reservavel.nome} - {reservavel.isReservado ? "Reservado" : "Disponivel"}
+                </Link>
+            </li>
+        )
+    });
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -15,7 +28,7 @@ export default function Reservaveis({ auth, listaReservaveis }: PageProps<{ list
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900 dark:text-gray-100">
-                            <ReservaveisList listaReservaveis={listaReservaveis} auth={auth} />
+                            {reservaveisElementList}
                         </div>
                     </div>
                 </div>
