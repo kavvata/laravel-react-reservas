@@ -10,7 +10,7 @@ export default function Reservaveis({ auth, listaReservaveis }: PageProps<{ list
     reservaveis.forEach((reservavel) => {
         reservaveisElementList.push(
             <li>
-                <Link href={route('reservaveis.show', reservavel.id)}>
+                <Link key={reservavel.id} href={route('reservaveis.show', reservavel.id)}>
                     {reservavel.nome} - {reservavel.isReservado ? "Reservado" : "Disponivel"}
                 </Link>
             </li>
@@ -27,9 +27,14 @@ export default function Reservaveis({ auth, listaReservaveis }: PageProps<{ list
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900 dark:text-gray-100">
+                        <ul className="p-6 text-gray-900 dark:text-gray-100">
                             {reservaveisElementList}
-                        </div>
+                            <li>
+                                <Link className="font-bold" href={route('reservaveis.create')}>
+                                    + Novo Reservavel!
+                                </Link>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>

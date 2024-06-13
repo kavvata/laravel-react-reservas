@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Reservavel;
 use App\Repositories\Repository;
 use App\Repositories\ReservavelRepository;
 use Illuminate\Http\Request;
@@ -31,7 +32,7 @@ class ReservavelController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Reservaveis/Create');
     }
 
     /**
@@ -39,7 +40,13 @@ class ReservavelController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $novoReservavel = new Reservavel();
+        $novoReservavel->nome = $request->nome;
+        $novoReservavel->isReservado = false;
+
+        $novoReservavel->save();
+
+        return '<h1>Store - OK!</h1>';
     }
 
     /**
@@ -47,7 +54,9 @@ class ReservavelController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $reservavel = $this->repository->findById($id);
+
+        return $reservavel;
     }
 
     /**
