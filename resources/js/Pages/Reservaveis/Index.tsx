@@ -3,7 +3,7 @@ import { Head } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import ReservaveisList from '@/Components/ReservaveisList';
 
-export default function Reservaveis({ auth, controllerData }: PageProps<{ controllerData: string }>) {
+export default function Reservaveis({ auth, listaReservaveis }: PageProps<{ listaReservaveis: string }>) {
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -15,7 +15,7 @@ export default function Reservaveis({ auth, controllerData }: PageProps<{ contro
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900 dark:text-gray-100">
-                            <ReservaveisList controllerData={controllerData} auth={auth} />
+                            <ReservaveisList listaReservaveis={listaReservaveis} auth={auth} />
                         </div>
                     </div>
                 </div>

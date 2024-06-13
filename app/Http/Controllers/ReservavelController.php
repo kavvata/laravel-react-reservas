@@ -23,7 +23,7 @@ class ReservavelController extends Controller
     {
         $reservaveis = json_encode($this->repository->selectAll());
         /* nome do prop no react => variavel no laravel */
-        return Inertia::render('Reservaveis/Index', ['controllerData' => $reservaveis]);
+        return Inertia::render('Reservaveis/Index', ['listaReservaveis' => $reservaveis]);
     }
 
     /**
