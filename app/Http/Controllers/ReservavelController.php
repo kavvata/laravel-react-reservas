@@ -56,7 +56,7 @@ class ReservavelController extends Controller
     {
         $reservavel = $this->repository->findById($id);
 
-        return $reservavel;
+        return json_encode($reservavel);
     }
 
     /**
@@ -64,7 +64,9 @@ class ReservavelController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $reservavel = $this->repository->findById($id);
+
+        return Inertia::render('Reservaveis/Edit', ['reservavelJson' => json_encode($reservavel)]);
     }
 
     /**
@@ -72,7 +74,17 @@ class ReservavelController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $reservavel = $this->repository->findById($id);
+        if (!isset($reservavel)) {
+            return '<h1>Update - Erro: reservavel nao encontrado</h1>';
+        }
+
+        $reservavel->nome = $request->nome;
+        $reservavel->isReservado = $request->isReservado;
+
+        $reservavel->save();
+
+        return '<h1>Update - OK!</h1>';
     }
 
     /**
