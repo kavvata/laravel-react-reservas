@@ -16,6 +16,10 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(Reservavel::class);
             $table->foreignIdFor(User::class);
+            $table->dateTime('inicio');
+            $table->dateTime('devolucao_prevista');
+            $table->dateTime('devolucao')->nullable(true);
+            $table->string('descricao');
             $table->timestamps();
         });
     }
