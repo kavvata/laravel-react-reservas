@@ -3,8 +3,8 @@ import { Head, Link } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import { ReactNode } from 'react';
 
-export default function Reservaveis({ auth, listaReservaveis }: PageProps<{ listaReservaveis: string }>) {
-    const reservaveis: any[] = JSON.parse(listaReservaveis);
+export default function Reservaveis({ auth, reservaveisJson }: PageProps<{ reservaveisJson: string }>) {
+    const reservaveis: any[] = JSON.parse(reservaveisJson);
     const reservaveisElementList: ReactNode[] = [];
 
     reservaveis.forEach((reservavel) => {

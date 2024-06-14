@@ -19,10 +19,9 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::resource('/reservaveis', ReservavelController::class)->middleware(['auth', 'verified'])->parameters([
+Route::resource('/reservaveis', ReservavelController::class)->middleware(['auth'])->parameters([
     'reservaveis' => 'reservavel'
 ]);
-// Route::get('/reservaveis', [ReservavelController::class, 'index'])->middleware(['auth', 'verified'])->name('reservaveis');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
