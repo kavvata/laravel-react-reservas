@@ -22,5 +22,6 @@ class DatabaseSeeder extends Seeder
 
         $this->call(ReservavelSeeder::class);
         $this->call(ReservaSeeder::class);
+        $this->call(CategoriaSeeder::class);
     }
 }

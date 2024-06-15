@@ -5,14 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Reservavel extends Model
+class Categoria extends Model
 {
-    protected $table = 'reservaveis';
-
     use HasFactory;
 
-    public function categoria()
+    public function reservaveis()
     {
-        return $this->belongsTo(Categoria::class);
+        return $this->hasMany(Reservavel::class);
     }
 }
