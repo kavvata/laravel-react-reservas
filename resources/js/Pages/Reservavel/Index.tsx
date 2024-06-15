@@ -4,17 +4,26 @@ import { PageProps } from '@/types';
 import { ReactNode } from 'react';
 
 export default function Reservaveis({ auth, reservaveisJson }: PageProps<{ reservaveisJson: string }>) {
-    const reservaveis: any[] = JSON.parse(reservaveisJson);
-    const reservaveisElementList: ReactNode[] = [];
+    const categorias: any[] = JSON.parse(reservaveisJson);
 
-    reservaveis.forEach((reservavel) => {
+    const reservaveisElementList: ReactNode[] = [];
+    categorias.forEach((categoria) => {
+
+        // header da categoria
         reservaveisElementList.push(
-            <li>
-                <Link href={route('reservaveis.edit', reservavel.id)}>
-                    {reservavel.nome} - {reservavel.isReservado ? "Reservado" : "Disponivel"} - Categoria: {reservavel.categoria.nome}
-                </Link>
-            </li>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">{categoria.nome}</h2>
         )
+
+        // lista de reservaveis da categoria
+        categoria.reservaveis.forEach((reservavel: any) => {
+            reservaveisElementList.push(
+                <li>
+                    <Link href={route('reservaveis.edit', reservavel.id)}>
+                        {reservavel.nome} - {reservavel.isReservado ? "Reservado" : "Disponivel"}
+                    </Link>
+                </li>
+            )
+        });
     });
 
     return (

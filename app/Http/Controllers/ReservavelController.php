@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reservavel;
+use App\Repositories\CategoriaRepository;
 use App\Repositories\Repository;
 use App\Repositories\ReservavelRepository;
 use Illuminate\Http\Request;
@@ -22,8 +23,7 @@ class ReservavelController extends Controller
      */
     public function index()
     {
-        $reservaveis = $this->repository->selectAll();
-        $categorias = \App\Repositories\CategoriaRepository->selectAll();
+        $reservaveis = (new CategoriaRepository)->selectAllWith(['reservaveis']);
 
         /* nome do prop no react => variavel no laravel */
         return Inertia::render('Reservavel/Index', ['reservaveisJson' => json_encode($reservaveis)]);
