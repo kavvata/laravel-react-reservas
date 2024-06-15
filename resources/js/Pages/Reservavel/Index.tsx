@@ -10,8 +10,8 @@ export default function Reservaveis({ auth, reservaveisJson }: PageProps<{ reser
     reservaveis.forEach((reservavel) => {
         reservaveisElementList.push(
             <li>
-                <Link key={reservavel.id} href={route('reservaveis.edit', reservavel.id)}>
-                    {reservavel.nome} - {reservavel.isReservado ? "Reservado" : "Disponivel"}
+                <Link href={route('reservaveis.edit', reservavel.id)}>
+                    {reservavel.nome} - {reservavel.isReservado ? "Reservado" : "Disponivel"} - Categoria: {reservavel.categoria.nome}
                 </Link>
             </li>
         )
