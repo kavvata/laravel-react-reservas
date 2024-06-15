@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->dateTime('devolucao_prevista');
             $table->dateTime('devolucao')->nullable(true);
             $table->string('descricao');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
