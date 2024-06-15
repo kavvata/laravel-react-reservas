@@ -23,8 +23,10 @@ class ReservavelController extends Controller
     public function index()
     {
         $reservaveis = $this->repository->selectAll();
+        $categorias = \App\Repositories\CategoriaRepository->selectAll();
+
         /* nome do prop no react => variavel no laravel */
-        return Inertia::render('Reservaveis/Index', ['reservaveisJson' => json_encode($reservaveis)]);
+        return Inertia::render('Reservavel/Index', ['reservaveisJson' => json_encode($reservaveis)]);
     }
 
     /**
@@ -32,7 +34,7 @@ class ReservavelController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Reservaveis/Create');
+        return Inertia::render('Reservavel/Create');
     }
 
     /**
@@ -46,7 +48,7 @@ class ReservavelController extends Controller
 
         $novoReservavel->save();
 
-        return '<h1>Store - OK!</h1>';
+        return to_route('reservaveis.index');
     }
 
     /**
@@ -66,7 +68,7 @@ class ReservavelController extends Controller
     {
         $reservavel = $this->repository->findById($id);
 
-        return Inertia::render('Reservaveis/Edit', ['reservavelJson' => json_encode($reservavel)]);
+        return Inertia::render('Reservavel/Edit', ['reservavelJson' => json_encode($reservavel)]);
     }
 
     /**
@@ -84,7 +86,7 @@ class ReservavelController extends Controller
 
         $reservavel->save();
 
-        return '<h1>Update - OK!</h1>';
+        return to_route('reservaveis.index');
     }
 
     /**
