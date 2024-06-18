@@ -22,7 +22,7 @@ class ReservaController extends Controller
      */
     public function index()
     {
-        $reservas = $this->repository->selectAll();
+        $reservas = $this->repository->selectAllWith(['reservavel']);
         return Inertia::render('Reserva/Index', ['reservasJson' => json_encode($reservas)]);
     }
 

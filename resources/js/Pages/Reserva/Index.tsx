@@ -11,7 +11,7 @@ export default function Reservas({ auth, reservasJson }: PageProps<{ reservasJso
         reservasElementList.push(
             <li>
                 <Link href={route('reservas.edit', reserva.id)}>
-                    {reserva.descricao}: Inicio={reserva.inicio} | Prevista={reserva.devolucao_prevista}
+                    {reserva.reservavel.nome}: {reserva.descricao}: Inicio={reserva.inicio} | Prevista={reserva.devolucao_prevista}
                 </Link>
             </li>
         )

@@ -10,4 +10,9 @@ class Reserva extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
+    public function reservavel()
+    {
+        return $this->belongsTo(Reservavel::class);
+    }
 }
