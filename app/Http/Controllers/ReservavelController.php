@@ -67,8 +67,12 @@ class ReservavelController extends Controller
     public function edit(string $id)
     {
         $reservavel = $this->repository->findById($id);
+        $categorias = (new CategoriaRepository)->selectAll();
 
-        return Inertia::render('Reservavel/Edit', ['reservavelJson' => json_encode($reservavel)]);
+        return Inertia::render('Reservavel/Edit', [
+            'reservavelJson' => json_encode($reservavel),
+            'categoriasJson' => json_encode($categorias),
+        ]);
     }
 
     /**
