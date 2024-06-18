@@ -8,21 +8,24 @@ import { FormEventHandler } from "react";
 
 export default function Create({ auth }: PageProps) {
     const { data, setData, post, processing } = useForm({
-        nome: '',
+        nome: "",
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        post(route('reservaveis.store'));
+        post(route("reservaveis.store"));
     };
 
     return (
         <AuthenticatedLayout
             user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Novo reservavel</h2>}
+            header={
+                <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                    Novo reservavel
+                </h2>
+            }
         >
-
             <Head title="Novo Reservavel" />
 
             <div className="py-12">
@@ -30,8 +33,11 @@ export default function Create({ auth }: PageProps) {
                     <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                         <form onSubmit={submit}>
                             <div className="p-6 space-y-4 text-gray-900 dark:text-gray-100">
-                                <div>
-                                    <InputLabel htmlFor="nome-reservavel" value="Nome" />
+                                <div id="inputs">
+                                    <InputLabel
+                                        htmlFor="nome-reservavel"
+                                        value="Nome"
+                                    />
 
                                     <TextInput
                                         id="nome-reservavel"
@@ -40,7 +46,9 @@ export default function Create({ auth }: PageProps) {
                                         value={data.nome}
                                         className="mt-1 block w-full"
                                         isFocused={true}
-                                        onChange={(e) => setData('nome', e.target.value)}
+                                        onChange={(e) =>
+                                            setData("nome", e.target.value)
+                                        }
                                     />
                                 </div>
                                 <PrimaryButton disabled={processing}>
@@ -51,7 +59,6 @@ export default function Create({ auth }: PageProps) {
                     </div>
                 </div>
             </div>
-
         </AuthenticatedLayout>
     );
 }

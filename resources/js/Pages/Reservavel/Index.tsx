@@ -1,34 +1,40 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link } from '@inertiajs/react';
-import { PageProps } from '@/types';
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { Head, Link } from "@inertiajs/react";
+import { PageProps } from "@/types";
 
 function CategoriaSection(prop: { categoria: Categoria }) {
     return (
         <section>
-            <h2 className="text-lg font-bold mb-2 text-gray-900 dark:text-gray-100">{prop.categoria.nome}</h2>
-            {
-                prop.categoria.reservaveis.map(reservavel => (
-                    <li>
-                        <Link href={route('reservaveis.edit', reservavel.id)}>
-                            {reservavel.nome} - {reservavel.isReservado ? "Reservado" : "Disponivel"}
-                        </Link>
-
-                    </li>
-                )
-                )
-            }
+            <h2 className="text-lg font-bold mb-2 text-gray-900 dark:text-gray-100">
+                {prop.categoria.nome}
+            </h2>
+            {prop.categoria.reservaveis.map((reservavel) => (
+                <li>
+                    <Link href={route("reservaveis.edit", reservavel.id)}>
+                        {reservavel.nome} -{" "}
+                        {reservavel.isReservado ? "Reservado" : "Disponivel"}
+                    </Link>
+                </li>
+            ))}
             <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
         </section>
-    )
+    );
 }
 
-export default function Reservaveis({ auth, reservaveisJson }: PageProps<{ reservaveisJson: string }>) {
+export default function Reservaveis({
+    auth,
+    reservaveisJson,
+}: PageProps<{ reservaveisJson: string }>) {
     const categorias: Categoria[] = JSON.parse(reservaveisJson);
 
     return (
         <AuthenticatedLayout
             user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Reservaveis</h2>}
+            header={
+                <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                    Reservaveis
+                </h2>
+            }
         >
             <Head title="Reservaveis" />
 
@@ -37,10 +43,13 @@ export default function Reservaveis({ auth, reservaveisJson }: PageProps<{ reser
                     <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                         <ul className="p-6 text-gray-900 dark:text-gray-100">
                             <li>
-                                {
-                                    categorias.map(categoria => (<CategoriaSection categoria={categoria} />))
-                                }
-                                <Link className="font-bold" href={route('reservaveis.create')}>
+                                {categorias.map((categoria) => (
+                                    <CategoriaSection categoria={categoria} />
+                                ))}
+                                <Link
+                                    className="font-bold"
+                                    href={route("reservaveis.create")}
+                                >
                                     + Novo Reservavel!
                                 </Link>
                             </li>
