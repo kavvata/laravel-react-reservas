@@ -1,11 +1,11 @@
 import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
-import RadioButton from "@/Components/RadioButton";
 import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { PageProps } from "@/types";
 import { Head, useForm } from "@inertiajs/react";
 import { FormEventHandler } from "react";
+import Select from "react-dropdown-select";
 
 export default function Create({
     auth,
@@ -17,6 +17,7 @@ export default function Create({
 
     const { data, setData, patch, processing } = useForm({
         nome: reservavel.nome,
+        categoria_id: reservavel.categoria_id,
         isReservado: reservavel.isReservado,
     });
 
@@ -38,7 +39,7 @@ export default function Create({
             <Head title="Editar Reservavel" />
 
             <div className="py-12">
-                <div className="max-w- mx-auto sm:px-6 lg:px-8">
+                <div className="max-w-4xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                         <form onSubmit={submit}>
                             <div className="p-6 space-y-4 text-gray-900 dark:text-gray-100">
@@ -61,9 +62,31 @@ export default function Create({
                                     />
                                 </div>
                                 <div id="categoria-input">
-                                    {categorias.map((categoria) => (
-                                        <RadioButton value={categoria.id} />
-                                    ))}
+                                    <InputLabel
+                                        htmlFor="categoria-select"
+                                        value="Categoria"
+                                    />
+                                    {/* FIXME: this select is bad */}
+                                    <Select
+                                        className="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm "
+                                        multi={false}
+                                        options={categorias}
+                                        values={[data.categoria_id]}
+                                        onChange={(newValues: Categoria[]) => {
+                                            if (newValues.length == 0) {
+                                                return;
+                                            }
+                                            setData(
+                                                "categoria_id",
+                                                newValues[0].id,
+                                            );
+                                        }}
+                                        labelField="nome"
+                                        valueField="id"
+                                        searchBy="nome"
+                                        placeholder="Sem Categoria"
+                                        color="#111827"
+                                    />
                                 </div>
                                 <PrimaryButton disabled={processing}>
                                     Atualizar
