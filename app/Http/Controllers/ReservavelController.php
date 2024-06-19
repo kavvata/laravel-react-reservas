@@ -44,6 +44,7 @@ class ReservavelController extends Controller
     {
         $novoReservavel = new Reservavel();
         $novoReservavel->nome = $request->nome;
+        $novoReservavel->categoria_id = $request->categoria_id;
         $novoReservavel->isReservado = false;
 
         $novoReservavel->save();
@@ -86,6 +87,7 @@ class ReservavelController extends Controller
         }
 
         $reservavel->nome = $request->nome;
+        $reservavel->categoria_id = $request->categoria_id;
         $reservavel->isReservado = $request->isReservado;
 
         $reservavel->save();
