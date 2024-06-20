@@ -9,12 +9,9 @@ import Select from "react-dropdown-select";
 
 export default function Create({
     auth,
-    reservavelJson,
-    categoriasJson,
-}: PageProps<{ reservavelJson: string; categoriasJson: string }>) {
-    const reservavel = JSON.parse(reservavelJson);
-    const categorias: Categoria[] = JSON.parse(categoriasJson);
-
+    reservavel,
+    categorias,
+}: PageProps<{ reservavel: Reservavel; categorias: Categoria[] }>) {
     const { data, setData, patch, processing } = useForm({
         nome: reservavel.nome,
         categoria_id: reservavel.categoria_id,
@@ -71,7 +68,9 @@ export default function Create({
                                         className="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm "
                                         multi={false}
                                         options={categorias}
-                                        values={[data.categoria_id]}
+                                        values={categorias.filter(
+                                            (c) => c.id == data.categoria_id,
+                                        )}
                                         onChange={(newValues: Categoria[]) => {
                                             if (newValues.length == 0) {
                                                 return;

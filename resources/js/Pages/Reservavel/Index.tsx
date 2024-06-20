@@ -23,10 +23,8 @@ function CategoriaSection(prop: { categoria: Categoria }) {
 
 export default function Reservaveis({
     auth,
-    reservaveisJson,
-}: PageProps<{ reservaveisJson: string }>) {
-    const categorias: Categoria[] = JSON.parse(reservaveisJson);
-
+    categorias,
+}: PageProps<{ categorias: Categoria[] }>) {
     return (
         <AuthenticatedLayout
             user={auth.user}

@@ -23,10 +23,10 @@ class ReservavelController extends Controller
      */
     public function index()
     {
-        $reservaveis = (new CategoriaRepository)->selectAllWith(['reservaveis']);
+        $categoriasComReservaveis = (new CategoriaRepository)->selectAllWith(['reservaveis']);
 
-        /* nome do prop no react => variavel no laravel */
-        return Inertia::render('Reservavel/Index', ['reservaveisJson' => json_encode($reservaveis)]);
+        /* nome do prop na pagina => variavel no laravel */
+        return Inertia::render('Reservavel/Index', ['categorias' => $categoriasComReservaveis]);
     }
 
     /**
@@ -42,9 +42,15 @@ class ReservavelController extends Controller
      */
     public function store(Request $request)
     {
+        $categoria = (new CategoriaRepository)->findById($request->categoria_id);
+
+        if (!isset($categoria)) {
+            return '<h2> Erro, categoria nao encontrada </h2>';
+        }
+
         $novoReservavel = new Reservavel();
         $novoReservavel->nome = $request->nome;
-        $novoReservavel->categoria_id = $request->categoria_id;
+        $novoReservavel->categoria()->associate($categoria);
         $novoReservavel->isReservado = false;
 
         $novoReservavel->save();
@@ -68,11 +74,16 @@ class ReservavelController extends Controller
     public function edit(string $id)
     {
         $reservavel = $this->repository->findById($id);
+
+        if (!isset($reservavel)) {
+            return '<h2>Edit - Reservavel nao encontrado </h2>';
+        }
+
         $categorias = (new CategoriaRepository)->selectAll();
 
         return Inertia::render('Reservavel/Edit', [
-            'reservavelJson' => json_encode($reservavel),
-            'categoriasJson' => json_encode($categorias),
+            'reservavel' => $reservavel,
+            'categorias' => $categorias,
         ]);
     }
 
@@ -82,13 +93,15 @@ class ReservavelController extends Controller
     public function update(Request $request, string $id)
     {
         $reservavel = $this->repository->findById($id);
-        if (!isset($reservavel)) {
-            return '<h1>Update - Erro: reservavel nao encontrado</h1>';
+        $categoria = (new CategoriaRepository)->findById($request->categoria_id);
+
+        if (!isset($reservavel) || !isset($categoria)) {
+            return '<h1>Update - Erro: reservavel ou categoria nao encontrado</h1>';
         }
 
         $reservavel->nome = $request->nome;
-        $reservavel->categoria_id = $request->categoria_id;
         $reservavel->isReservado = $request->isReservado;
+        $reservavel->categoria()->associate($categoria);
 
         $reservavel->save();
 
