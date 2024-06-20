@@ -20,8 +20,10 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
-        $this->call(ReservavelSeeder::class);
-        $this->call(ReservaSeeder::class);
-        $this->call(CategoriaSeeder::class);
+        $this->call([
+            CategoriaSeeder::class,
+            ReservavelSeeder::class,
+            ReservaSeeder::class
+        ]);
     }
 }
