@@ -34,7 +34,9 @@ class ReservavelController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Reservavel/Create');
+        return Inertia::render('Reservavel/Create', [
+            'categorias' => (new CategoriaRepository)->selectAll(),
+        ]);
     }
 
     /**
@@ -63,9 +65,10 @@ class ReservavelController extends Controller
      */
     public function show(string $id)
     {
+        // TODO: detalhes com todas as reservas do item
         $reservavel = $this->repository->findById($id);
 
-        return json_encode($reservavel);
+        return $reservavel;
     }
 
     /**
