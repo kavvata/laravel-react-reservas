@@ -26,7 +26,7 @@ export default function Create({
         <AuthenticatedLayout
             user={auth.user}
             header={
-                <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
                     Novo reservavel
                 </h2>
             }
@@ -34,10 +34,10 @@ export default function Create({
             <Head title="Novo Reservavel" />
 
             <div className="py-12">
-                <div className="max-w-4xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div className="mx-auto max-w-4xl sm:px-6 lg:px-8">
+                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
                         <form onSubmit={submit}>
-                            <div className="p-6 space-y-4 text-gray-900 dark:text-gray-100">
+                            <div className="space-y-4 p-6 text-gray-900 dark:text-gray-100">
                                 <div id="nome-input">
                                     <InputLabel
                                         htmlFor="nome-reservavel"
@@ -63,7 +63,7 @@ export default function Create({
                                     />
                                     {/* FIXME: this select is bad */}
                                     <Select
-                                        className="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm "
+                                        className="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-indigo-600 dark:focus:ring-indigo-600 "
                                         multi={false}
                                         options={categorias}
                                         values={categorias.filter(
