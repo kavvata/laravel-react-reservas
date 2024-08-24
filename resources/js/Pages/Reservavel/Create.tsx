@@ -5,7 +5,6 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { PageProps } from "@/types";
 import { Head, useForm } from "@inertiajs/react";
 import { FormEventHandler } from "react";
-import Select from "react-dropdown-select";
 
 export default function Create({
     auth,
@@ -18,6 +17,10 @@ export default function Create({
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
+
+        if (!data.nome || !data.categoria_id) {
+            return;
+        }
 
         post(route("reservaveis.store"));
     };
@@ -61,29 +64,13 @@ export default function Create({
                                         htmlFor="categoria-select"
                                         value="Categoria"
                                     />
-                                    {/* FIXME: this select is bad */}
-                                    <Select
-                                        className="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-indigo-600 dark:focus:ring-indigo-600 "
-                                        multi={false}
-                                        options={categorias}
-                                        values={categorias.filter(
-                                            (c) => c.id == data.categoria_id,
-                                        )}
-                                        onChange={(newValues: Categoria[]) => {
-                                            if (newValues.length == 0) {
-                                                return;
-                                            }
-                                            setData(
-                                                "categoria_id",
-                                                newValues[0].id,
-                                            );
-                                        }}
-                                        labelField="nome"
-                                        valueField="id"
-                                        searchBy="nome"
-                                        placeholder="Sem Categoria"
-                                        color="#111827"
-                                    />
+                                    <select className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                                        {categorias.map((categoria) => (
+                                            <option value={categoria.id}>
+                                                {categoria.nome}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
                                 <PrimaryButton disabled={processing}>
                                     Cadastrar
