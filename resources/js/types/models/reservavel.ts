@@ -3,4 +3,5 @@ type Reservavel = {
     categoria_id: number,
     nome: string,
     isReservado: boolean,
+    categoria: Categoria
 }

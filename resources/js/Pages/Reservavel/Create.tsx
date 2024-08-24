@@ -5,7 +5,6 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { PageProps } from "@/types";
 import { Head, useForm } from "@inertiajs/react";
 import { FormEventHandler } from "react";
-import Select from "react-dropdown-select";
 
 export default function Create({
     auth,
@@ -19,6 +18,10 @@ export default function Create({
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
+        if (!data.nome || !data.categoria_id) {
+            return;
+        }
+
         post(route("reservaveis.store"));
     };
 
@@ -26,7 +29,7 @@ export default function Create({
         <AuthenticatedLayout
             user={auth.user}
             header={
-                <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
                     Novo reservavel
                 </h2>
             }
@@ -34,10 +37,10 @@ export default function Create({
             <Head title="Novo Reservavel" />
 
             <div className="py-12">
-                <div className="max-w-4xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div className="mx-auto max-w-4xl sm:px-6 lg:px-8">
+                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
                         <form onSubmit={submit}>
-                            <div className="p-6 space-y-4 text-gray-900 dark:text-gray-100">
+                            <div className="space-y-4 p-6 text-gray-900 dark:text-gray-100">
                                 <div id="nome-input">
                                     <InputLabel
                                         htmlFor="nome-reservavel"
@@ -61,29 +64,13 @@ export default function Create({
                                         htmlFor="categoria-select"
                                         value="Categoria"
                                     />
-                                    {/* FIXME: this select is bad */}
-                                    <Select
-                                        className="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm "
-                                        multi={false}
-                                        options={categorias}
-                                        values={categorias.filter(
-                                            (c) => c.id == data.categoria_id,
-                                        )}
-                                        onChange={(newValues: Categoria[]) => {
-                                            if (newValues.length == 0) {
-                                                return;
-                                            }
-                                            setData(
-                                                "categoria_id",
-                                                newValues[0].id,
-                                            );
-                                        }}
-                                        labelField="nome"
-                                        valueField="id"
-                                        searchBy="nome"
-                                        placeholder="Sem Categoria"
-                                        color="#111827"
-                                    />
+                                    <select className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                                        {categorias.map((categoria) => (
+                                            <option value={categoria.id}>
+                                                {categoria.nome}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
                                 <PrimaryButton disabled={processing}>
                                     Cadastrar

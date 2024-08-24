@@ -76,7 +76,7 @@ class ReservavelController extends Controller
      */
     public function edit(string $id)
     {
-        $reservavel = $this->repository->findById($id);
+        $reservavel = $this->repository->findByIdWith(['categoria'], $id);
 
         if (!isset($reservavel)) {
             return '<h2>Edit - Reservavel nao encontrado </h2>';
