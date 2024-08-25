@@ -60,13 +60,13 @@ class ReservaRepository implements Repository
 
     public function delete($id)
     {
-        $reservavel = $this->findById($id);
-        if (!isset($reservavel)) {
+        $reserva = $this->findById($id);
+        if (!isset($reserva)) {
             return false;
         }
 
         try {
-            $reservavel->delete();
+            $reserva->delete();
             return true;
         } catch (\Exception $e) {
             dd($e);
@@ -75,14 +75,14 @@ class ReservaRepository implements Repository
 
     public function restore($id)
     {
-        $reservavel = $this->findById($id);
+        $reserva = $this->findById($id);
 
-        if (isset($reservavel)) {
+        if (isset($reserva)) {
             return false;
         }
 
         try {
-            $reservavel->restore();
+            $reserva->restore();
             return true;
         } catch (\Exception $e) {
             dd($e);

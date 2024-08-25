@@ -64,7 +64,15 @@ export default function Create({
                                         htmlFor="categoria-select"
                                         value="Categoria"
                                     />
-                                    <select className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                                    <select
+                                        className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                                        onChange={(e) =>
+                                            setData(
+                                                "categoria_id",
+                                                Number(e.target.value),
+                                            )
+                                        }
+                                    >
                                         {categorias.map((categoria) => (
                                             <option value={categoria.id}>
                                                 {categoria.nome}

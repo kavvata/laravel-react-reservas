@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reserva;
+use App\Repositories\CategoriaRepository;
 use App\Repositories\Repository;
 use App\Repositories\ReservaRepository;
+use App\Repositories\ReservavelRepository;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -22,8 +24,9 @@ class ReservaController extends Controller
      */
     public function index()
     {
-        $reservas = $this->repository->selectAllWith(['reservavel']);
-        return Inertia::render('Reserva/Index', ['reservasJson' => json_encode($reservas)]);
+        return Inertia::render('Reserva/Index', [
+            'reservas' => $this->repository->selectAllWith(['reservavel'])
+        ]);
     }
 
     /**
@@ -31,7 +34,9 @@ class ReservaController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Reserva/Create', [
+            'categorias' => (new CategoriaRepository)->selectAllWith(['reservaveis']),
+        ]);
     }
 
     /**
