@@ -6,7 +6,6 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { PageProps } from "@/types";
 import { Head, useForm } from "@inertiajs/react";
 import { FormEventHandler } from "react";
-import Select from "react-dropdown-select";
 
 export default function Create({
     auth,
@@ -15,7 +14,7 @@ export default function Create({
 }: PageProps<{ reservavel: Reservavel; categorias: Categoria[] }>) {
     const { data, setData, patch, processing } = useForm({
         nome: reservavel.nome,
-        categoria: reservavel.categoria.id,
+        categoria_id: reservavel.categoria.id,
         isReservado: reservavel.isReservado,
     });
 
@@ -29,13 +28,13 @@ export default function Create({
         );
 
         if (newCategoria != undefined) {
-            setData("categoria", newCategoria.id);
+            setData("categoria_id", newCategoria.id);
         }
         patch(route("reservaveis.update", reservavel.id));
     };
 
     let categoriaBuffer = categorias.find(
-        (categoria) => categoria.id == data.categoria,
+        (categoria) => categoria.id == data.categoria_id,
     )!.nome;
 
     return (
@@ -77,18 +76,21 @@ export default function Create({
                                         htmlFor="categoria-select"
                                         value="Categoria"
                                     />
-                                    <TextInput
-                                        id="categoria-reservavel"
-                                        type="text"
-                                        name="categoria-reservavel"
-                                        value={categoriaBuffer}
-                                        className="mt-1 block w-full"
-                                        isFocused={true}
-                                        // FIXME: still broken
-                                        onChange={(e) => {
-                                            categoriaBuffer = e.target.value;
-                                        }}
-                                    />
+                                    <select
+                                        className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                                        onChange={(e) =>
+                                            setData(
+                                                "categoria_id",
+                                                Number(e.target.value),
+                                            )
+                                        }
+                                    >
+                                        {categorias.map((categoria) => (
+                                            <option value={categoria.id}>
+                                                {categoria.nome}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
                                 <PrimaryButton disabled={processing}>
                                     Atualizar

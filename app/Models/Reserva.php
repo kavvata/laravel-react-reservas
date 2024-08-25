@@ -15,4 +15,9 @@ class Reserva extends Model
     {
         return $this->belongsTo(Reservavel::class);
     }
+
+    public function responsavel()
+    {
+        return $this->hasOne(User::class);
+    }
 }
