@@ -19,6 +19,11 @@ class ReservavelRepository implements Repository
         return $this->model->all();
     }
 
+    public function selectDisponiveis()
+    {
+        return $this->findByColumn('isReservado', true);
+    }
+
     public function selectAllWith(array $relations)
     {
         return $this->model::with($relations)->get();
