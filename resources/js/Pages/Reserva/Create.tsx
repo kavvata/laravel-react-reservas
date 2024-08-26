@@ -4,25 +4,63 @@ import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { PageProps } from "@/types";
 import { Head, useForm } from "@inertiajs/react";
-import { FormEventHandler, MouseEventHandler } from "react";
+import { ChangeEvent, FormEventHandler, useState } from "react";
 
 export default function Create({
     auth,
     categorias,
 }: PageProps<{ categorias: Categoria[] }>) {
     const { data, setData, post, processing } = useForm({
-        reservaveis_selecionados: Array() as Reservavel[],
-        categoria_selecionada_id: categorias[0].id,
+        // reservaveis_selecionados: Array() as Reservavel[],
+        // categoria_selecionada_id: categorias[0].id,
         // devolucao_prevista: Date.now(),
         // inicio: Date.now(),
         responsavel_id: auth.user.id,
     });
+
+    const [reservaveisSelecionados, setReservaveisSelecionados] =
+        useState<Reservavel[]>(Array());
+
+    const [categoriaSelecionada, setCategoriaSelecionada] = useState<Categoria>(
+        categorias[0],
+    );
+
+    const [reservavelSelecionado, setReservavelSelecionado] =
+        useState<Reservavel>();
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
         post(route("reservas.store"));
     };
+
+    function selecionaCategoria(event: ChangeEvent<HTMLSelectElement>): void {
+        const novaCategoria = categorias.find(
+            (c) => c.id === Number(event.target.value),
+        );
+
+        if (novaCategoria !== undefined) {
+            setCategoriaSelecionada(novaCategoria);
+        }
+    }
+
+    function selecionaReservavel(event: ChangeEvent<HTMLSelectElement>): void {
+        const novoSelecionado = categoriaSelecionada.reservaveis.find(
+            (r) => r.id === Number(event.target.value),
+        );
+
+        if (novoSelecionado !== undefined) {
+            setReservavelSelecionado(novoSelecionado);
+        }
+    }
+
+    function adicionaReservavel(
+        event: React.MouseEvent<HTMLSelectElement, MouseEvent>,
+    ): void {
+        if (reservavelSelecionado !== undefined) {
+            reservaveisSelecionados.push(reservavelSelecionado);
+        }
+    }
 
     return (
         <AuthenticatedLayout
@@ -48,12 +86,7 @@ export default function Create({
 
                                     <select
                                         className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                                        onChange={(e) =>
-                                            setData(
-                                                "categoria_selecionada_id",
-                                                Number(e.target.value),
-                                            )
-                                        }
+                                        onChange={selecionaCategoria}
                                     >
                                         {categorias.map((categoria) => (
                                             <option value={categoria.id}>
@@ -69,25 +102,26 @@ export default function Create({
                                     <select
                                         size={5}
                                         className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                                        onChange={selecionaReservavel}
+                                        onDoubleClick={adicionaReservavel}
                                     >
-                                        {categorias[
-                                            data.categoria_selecionada_id - 1
-                                        ].reservaveis.map((reservavel) => (
-                                            <option value={reservavel.id}>
-                                                {reservavel.nome}
-                                            </option>
-                                        ))}
+                                        {categoriaSelecionada.reservaveis.map(
+                                            (reservavel) => (
+                                                <option value={reservavel.id}>
+                                                    {reservavel.nome}
+                                                </option>
+                                            ),
+                                        )}
                                     </select>
 
                                     <select
                                         size={5}
                                         className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                                     >
-                                        {data.reservaveis_selecionados.map(
+                                        {reservaveisSelecionados.map(
                                             (reservavel) => (
                                                 <option value={reservavel.id}>
-                                                    {reservavel.nome} -{" "}
-                                                    {reservavel.categoria.nome}
+                                                    {reservavel.nome}{" "}
                                                 </option>
                                             ),
                                         )}
