@@ -8,6 +8,7 @@ use App\Repositories\Repository;
 use App\Repositories\ReservaRepository;
 use App\Repositories\ReservavelRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class ReservaController extends Controller
@@ -44,7 +45,38 @@ class ReservaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $dateFormat = 'Y-m-d H:i:s';
+
+        $request->validate([
+            'reservavel_id' => 'required',
+            'inicio' => 'required',
+            'devolucao_prevista' => 'required',
+            'descricao' => 'required|string',
+        ]);
+
+        $reservavel = (new ReservavelRepository)->findById($request->reservavel_id);
+
+        if (!isset($reservavel)) {
+            return '<h2>STORE - Resrvavel nao encontrado </h2>';
+        }
+
+        $user = Auth::user();
+
+        if (!isset($user)) {
+            return '<h2>STORE - Usuario autenticado nao encontrado??? </h2>';
+        }
+
+        $novaReserva = new Reserva();
+        $novaReserva->reservavel()->associate($reservavel);
+        $novaReserva->responsavel($user);
+        /* FIXME: */
+        $novaReserva->inicio = date($dateFormat, $request->inicio);
+        $novaReserva->devolucao_prevista = date($dateFormat, $request->devolucao_prevista);
+        $novaReserva->descricao = $request->descricao;
+
+        $novaReserva->save();
+
+        return to_route('reserva.index');
     }
 
     /**

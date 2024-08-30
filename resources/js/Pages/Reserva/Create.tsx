@@ -1,38 +1,46 @@
+import DatePickerInput from "@/Components/DatePickerInput";
+import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { PageProps } from "@/types";
 import { Head, useForm } from "@inertiajs/react";
-import { ChangeEvent, FormEventHandler, useState } from "react";
+import { ChangeEvent, FormEventHandler, useEffect, useState } from "react";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function Create({
     auth,
     categorias,
 }: PageProps<{ categorias: Categoria[] }>) {
-    const { data, setData, post, processing } = useForm({
-        // reservaveis_selecionados: Array() as Reservavel[],
-        // categoria_selecionada_id: categorias[0].id,
-        // devolucao_prevista: Date.now(),
-        // inicio: Date.now(),
-        responsavel_id: auth.user.id,
+    const { data, setData, post, processing, errors, reset } = useForm({
+        reservavel_id: categorias[0].reservaveis[0].id,
+        /* FIXME:*/
+        inicio: Date.now(),
+        devolucao_prevista: Date.now(),
+        /* FIXME:*/
+        descricao: "",
     });
 
-    const [reservaveisSelecionados, setReservaveisSelecionados] =
-        useState<Reservavel[]>(Array());
+    const submit: FormEventHandler = (e) => {
+        e.preventDefault();
+
+        setData("inicio", dateInicio.getUTCMilliseconds());
+        setData(
+            "devolucao_prevista",
+            dateDevolucaoPrevista.getUTCMilliseconds(),
+        );
+
+        post(route("reservas.store", data));
+    };
 
     const [categoriaSelecionada, setCategoriaSelecionada] = useState<Categoria>(
         categorias[0],
     );
 
-    const [reservavelSelecionado, setReservavelSelecionado] =
-        useState<Reservavel>();
+    const [dateInicio, setDateInicio] = useState<Date>(new Date());
 
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault();
-
-        post(route("reservas.store"));
-    };
+    const [dateDevolucaoPrevista, setDateEstimado] = useState<Date>(new Date());
 
     function selecionaCategoria(event: ChangeEvent<HTMLSelectElement>): void {
         const novaCategoria = categorias.find(
@@ -45,21 +53,7 @@ export default function Create({
     }
 
     function selecionaReservavel(event: ChangeEvent<HTMLSelectElement>): void {
-        const novoSelecionado = categoriaSelecionada.reservaveis.find(
-            (r) => r.id === Number(event.target.value),
-        );
-
-        if (novoSelecionado !== undefined) {
-            setReservavelSelecionado(novoSelecionado);
-        }
-    }
-
-    function adicionaReservavel(
-        event: React.MouseEvent<HTMLSelectElement, MouseEvent>,
-    ): void {
-        if (reservavelSelecionado !== undefined) {
-            reservaveisSelecionados.push(reservavelSelecionado);
-        }
+        throw new Error("Function not implemented.");
     }
 
     return (
@@ -78,13 +72,44 @@ export default function Create({
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
                         <form onSubmit={submit}>
                             <div className="space-y-4 p-6 text-gray-900 dark:text-gray-100">
+                                <div id="dates" className="flex flex-row">
+                                    <div>
+                                        <InputLabel
+                                            htmlFor="date-inicio"
+                                            value="Inicio"
+                                        />
+                                        <DatePickerInput
+                                            selected={dateInicio}
+                                            onChange={(date) => {
+                                                if (date) {
+                                                    setDateInicio(date);
+                                                }
+                                            }}
+                                        />
+                                    </div>
+                                    <div>
+                                        <InputLabel
+                                            htmlFor="date-devolucao"
+                                            value="Devolução"
+                                        />
+                                        <DatePickerInput
+                                            selected={dateDevolucaoPrevista}
+                                            onChange={(date) => {
+                                                if (date) {
+                                                    setDateEstimado(date);
+                                                }
+                                            }}
+                                        />
+                                    </div>
+                                </div>
                                 <div id="filtro-input">
                                     <InputLabel
-                                        htmlFor="nome-reserva"
+                                        htmlFor="filtro-categoria"
                                         value="Filtrar"
                                     />
 
                                     <select
+                                        id="filtro-categoria"
                                         className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                                         onChange={selecionaCategoria}
                                     >
@@ -95,15 +120,15 @@ export default function Create({
                                         ))}
                                     </select>
                                 </div>
-                                <div
-                                    id="reservaveis-input"
-                                    className="flex flex-row"
-                                >
+                                <div id="reservaveis-input">
+                                    <InputLabel
+                                        htmlFor="reservaveis"
+                                        value="Reservavel"
+                                    />
                                     <select
-                                        size={5}
+                                        id="reservaveis"
                                         className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                                         onChange={selecionaReservavel}
-                                        onDoubleClick={adicionaReservavel}
                                     >
                                         {categoriaSelecionada.reservaveis.map(
                                             (reservavel) => (
@@ -113,20 +138,32 @@ export default function Create({
                                             ),
                                         )}
                                     </select>
-
-                                    <select
-                                        size={5}
-                                        className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                                    >
-                                        {reservaveisSelecionados.map(
-                                            (reservavel) => (
-                                                <option value={reservavel.id}>
-                                                    {reservavel.nome}{" "}
-                                                </option>
-                                            ),
-                                        )}
-                                    </select>
                                 </div>
+
+                                <div>
+                                    <InputLabel
+                                        htmlFor="descricao"
+                                        value="Descrição"
+                                    />
+
+                                    <TextInput
+                                        id="descricao"
+                                        type="text"
+                                        name="descricao"
+                                        value={data.descricao}
+                                        className="mt-1 block w-full"
+                                        isFocused={true}
+                                        onChange={(e) =>
+                                            setData("descricao", e.target.value)
+                                        }
+                                    />
+                                </div>
+
+                                <InputError
+                                    message={errors.devolucao_prevista}
+                                    className="mt-2"
+                                />
+
                                 <PrimaryButton disabled={processing}>
                                     Cadastrar
                                 </PrimaryButton>
