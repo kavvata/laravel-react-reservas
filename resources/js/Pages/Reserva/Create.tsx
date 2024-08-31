@@ -13,13 +13,40 @@ export default function Create({
     auth,
     categorias,
 }: PageProps<{ categorias: Categoria[] }>) {
-    const now = new Date(Date.now());
+    const [categoriaSelecionada, setCategoriaSelecionada] = useState<Categoria>(
+        categorias[0],
+    );
+
+    const [dateInicio, setDateInicio] = useState<Date>(new Date(Date.now()));
+
+    const [dateDevolucaoPrevista, setDateEstimado] = useState<Date>(
+        new Date(Date.now()),
+    );
+
+    function selecionaCategoria(event: ChangeEvent<HTMLSelectElement>): void {
+        const novaCategoria = categorias.find(
+            (c) => c.id == Number(event.target.value),
+        );
+
+        if (novaCategoria) {
+            setCategoriaSelecionada(novaCategoria);
+            setData("reservavel_id", categoriaSelecionada.reservaveis[0].id);
+        }
+    }
+
+    function selecionaReservavel(event: ChangeEvent<HTMLSelectElement>): void {
+        /* FIXME: nao disparando quando categoria é alterada */
+        console.log(
+            `select-reservavel mudou! novo valor ${event.target.value}`,
+        );
+
+        setData("reservavel_id", Number(event.target.value));
+    }
 
     const { data, setData, post, processing, errors } = useForm({
-        /* FIXME: Nao atualizando quando dado é selecionado  */
-        reservavel_id: categorias[0].reservaveis[0].id,
-        inicio: Date.now(),
-        devolucao_prevista: Date.now(),
+        reservavel_id: categoriaSelecionada.reservaveis[0].id,
+        inicio: dateInicio.getTime(),
+        devolucao_prevista: dateDevolucaoPrevista.getTime(),
         descricao: "",
     });
 
@@ -29,26 +56,9 @@ export default function Create({
         setData("inicio", dateInicio.getTime());
         setData("devolucao_prevista", dateDevolucaoPrevista.getTime());
 
-        post(route("reservas.store", data));
+        console.log(data);
+        // post(route("reservas.store", data));
     };
-
-    const [categoriaSelecionada, setCategoriaSelecionada] = useState<Categoria>(
-        categorias[0],
-    );
-
-    const [dateInicio, setDateInicio] = useState<Date>(new Date());
-
-    const [dateDevolucaoPrevista, setDateEstimado] = useState<Date>(new Date());
-
-    function selecionaCategoria(event: ChangeEvent<HTMLSelectElement>): void {
-        const novaCategoria = categorias.find(
-            (c) => c.id === Number(event.target.value),
-        );
-
-        if (novaCategoria !== undefined) {
-            setCategoriaSelecionada(novaCategoria);
-        }
-    }
 
     return (
         <AuthenticatedLayout
@@ -122,12 +132,7 @@ export default function Create({
                                     <select
                                         id="reservaveis"
                                         className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                                        onChange={(e) => {
-                                            setData(
-                                                "reservavel_id",
-                                                Number(e.target.value),
-                                            );
-                                        }}
+                                        onChange={selecionaReservavel}
                                     >
                                         {categoriaSelecionada.reservaveis.map(
                                             (reservavel) => (

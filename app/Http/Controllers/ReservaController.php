@@ -101,7 +101,7 @@ class ReservaController extends Controller
 
         $novaReserva->save();
 
-        return to_route('reserva.index');
+        return to_route('reservas.index');
     }
 
     /**
