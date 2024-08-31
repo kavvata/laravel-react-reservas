@@ -10,6 +10,7 @@ use App\Repositories\ReservavelRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Monolog\DateTimeImmutable;
 
 class ReservaController extends Controller
 {
@@ -18,6 +19,11 @@ class ReservaController extends Controller
     public function __construct()
     {
         $this->repository = new ReservaRepository;
+    }
+
+    private function removeMilliseconds(int $timestamp): int
+    {
+        return floor($timestamp / 1000);
     }
 
     /**
@@ -68,10 +74,29 @@ class ReservaController extends Controller
 
         $novaReserva = new Reserva();
         $novaReserva->reservavel()->associate($reservavel);
-        $novaReserva->responsavel($user);
-        /* FIXME: */
-        $novaReserva->inicio = date($dateFormat, $request->inicio);
-        $novaReserva->devolucao_prevista = date($dateFormat, $request->devolucao_prevista);
+        $novaReserva->responsavel()->associate($user);
+
+        $inicioFormatado = $this->removeMilliseconds($request->inicio);
+        $devolucaoPrevistaFormatada = $this->removeMilliseconds($request->devolucao_prevista);
+
+        // $debugDate = [
+        //     'now' => strtotime('now'),
+        //     'inicio' => $this->removeMilliseconds($request->inicio),
+        //     'devolucao_prevista' => $this->removeMilliseconds($request->devolucao_prevista),
+        //     'f_inicio' => date($dateFormat, $inicioFormatado),
+        //     'f_devolucao_prevista' => date($dateFormat, $devolucaoPrevistaFormatada),
+        // ];
+
+        $novaReserva->inicio = date(
+            $dateFormat,
+            $this->removeMilliseconds($request->inicio)
+        );
+
+        $novaReserva->devolucao_prevista = date(
+            $dateFormat,
+            $this->removeMilliseconds($request->devolucao_prevista)
+        );
+
         $novaReserva->descricao = $request->descricao;
 
         $novaReserva->save();

@@ -13,23 +13,21 @@ export default function Create({
     auth,
     categorias,
 }: PageProps<{ categorias: Categoria[] }>) {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const now = new Date(Date.now());
+
+    const { data, setData, post, processing, errors } = useForm({
+        /* FIXME: Nao atualizando quando dado é selecionado  */
         reservavel_id: categorias[0].reservaveis[0].id,
-        /* FIXME:*/
         inicio: Date.now(),
         devolucao_prevista: Date.now(),
-        /* FIXME:*/
         descricao: "",
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        setData("inicio", dateInicio.getUTCMilliseconds());
-        setData(
-            "devolucao_prevista",
-            dateDevolucaoPrevista.getUTCMilliseconds(),
-        );
+        setData("inicio", dateInicio.getTime());
+        setData("devolucao_prevista", dateDevolucaoPrevista.getTime());
 
         post(route("reservas.store", data));
     };
@@ -50,10 +48,6 @@ export default function Create({
         if (novaCategoria !== undefined) {
             setCategoriaSelecionada(novaCategoria);
         }
-    }
-
-    function selecionaReservavel(event: ChangeEvent<HTMLSelectElement>): void {
-        throw new Error("Function not implemented.");
     }
 
     return (
@@ -128,7 +122,12 @@ export default function Create({
                                     <select
                                         id="reservaveis"
                                         className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                                        onChange={selecionaReservavel}
+                                        onChange={(e) => {
+                                            setData(
+                                                "reservavel_id",
+                                                Number(e.target.value),
+                                            );
+                                        }}
                                     >
                                         {categoriaSelecionada.reservaveis.map(
                                             (reservavel) => (
