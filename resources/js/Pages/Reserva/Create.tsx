@@ -17,12 +17,6 @@ export default function Create({
         categorias[0],
     );
 
-    const [dateInicio, setDateInicio] = useState<Date>(new Date(Date.now()));
-
-    const [dateDevolucaoPrevista, setDateEstimado] = useState<Date>(
-        new Date(Date.now()),
-    );
-
     function selecionaCategoria(event: ChangeEvent<HTMLSelectElement>): void {
         const novaCategoria = categorias.find(
             (c) => c.id == Number(event.target.value),
@@ -30,34 +24,34 @@ export default function Create({
 
         if (novaCategoria) {
             setCategoriaSelecionada(novaCategoria);
-            setData("reservavel_id", categoriaSelecionada.reservaveis[0].id);
+            setData("reservavel_id", novaCategoria.reservaveis[0].id);
         }
     }
 
     function selecionaReservavel(event: ChangeEvent<HTMLSelectElement>): void {
-        /* FIXME: nao disparando quando categoria é alterada */
-        console.log(
-            `select-reservavel mudou! novo valor ${event.target.value}`,
+        const novoReservavel = categoriaSelecionada.reservaveis.find(
+            (r) => r.id == Number(event.target.value),
         );
 
-        setData("reservavel_id", Number(event.target.value));
+        if (novoReservavel) {
+            setData("reservavel_id", novoReservavel.id);
+        }
     }
 
     const { data, setData, post, processing, errors } = useForm({
         reservavel_id: categoriaSelecionada.reservaveis[0].id,
-        inicio: dateInicio.getTime(),
-        devolucao_prevista: dateDevolucaoPrevista.getTime(),
+        inicio: Date.now(),
+        devolucao_prevista: Date.now(),
         descricao: "",
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        setData("inicio", dateInicio.getTime());
-        setData("devolucao_prevista", dateDevolucaoPrevista.getTime());
+        // setData("inicio", dateInicio.getTime());
+        // setData("devolucao_prevista", dateDevolucaoPrevista.getTime());
 
-        console.log(data);
-        // post(route("reservas.store", data));
+        post(route("reservas.store", data));
     };
 
     return (
@@ -83,10 +77,13 @@ export default function Create({
                                             value="Inicio"
                                         />
                                         <DatePickerInput
-                                            selected={dateInicio}
+                                            selected={new Date(data.inicio)}
                                             onChange={(date) => {
                                                 if (date) {
-                                                    setDateInicio(date);
+                                                    setData(
+                                                        "inicio",
+                                                        date.getTime(),
+                                                    );
                                                 }
                                             }}
                                         />
@@ -97,10 +94,17 @@ export default function Create({
                                             value="Devolução"
                                         />
                                         <DatePickerInput
-                                            selected={dateDevolucaoPrevista}
+                                            selected={
+                                                new Date(
+                                                    data.devolucao_prevista,
+                                                )
+                                            }
                                             onChange={(date) => {
                                                 if (date) {
-                                                    setDateEstimado(date);
+                                                    setData(
+                                                        "devolucao_prevista",
+                                                        date.getTime(),
+                                                    );
                                                 }
                                             }}
                                         />
@@ -118,7 +122,10 @@ export default function Create({
                                         onChange={selecionaCategoria}
                                     >
                                         {categorias.map((categoria) => (
-                                            <option value={categoria.id}>
+                                            <option
+                                                key={categoria.id}
+                                                value={categoria.id}
+                                            >
                                                 {categoria.nome}
                                             </option>
                                         ))}
@@ -136,7 +143,10 @@ export default function Create({
                                     >
                                         {categoriaSelecionada.reservaveis.map(
                                             (reservavel) => (
-                                                <option value={reservavel.id}>
+                                                <option
+                                                    key={reservavel.id}
+                                                    value={reservavel.id}
+                                                >
                                                     {reservavel.nome}
                                                 </option>
                                             ),
