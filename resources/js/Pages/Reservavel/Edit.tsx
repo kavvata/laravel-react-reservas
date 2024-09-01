@@ -6,7 +6,7 @@ import { PageProps } from "@/types";
 import { Head, useForm } from "@inertiajs/react";
 import { FormEventHandler } from "react";
 
-export default function Create({
+export default function Edit({
     auth,
     reservavel,
     categorias,
