@@ -15,7 +15,7 @@ return new class extends Migration {
         Schema::create('reservas', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Reservavel::class);
-            $table->foreignIdFor(User::class);
+            $table->foreignIdFor(User::class, 'responsavel_id');
             $table->dateTime('inicio');
             $table->dateTime('devolucao_prevista');
             $table->dateTime('devolucao')->nullable(true);

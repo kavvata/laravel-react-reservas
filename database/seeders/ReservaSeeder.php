@@ -15,7 +15,7 @@ class ReservaSeeder extends Seeder
         $format = 'Y-m-d H:i:s';
         $data = [
             [
-                'user_id' => '1',
+                'responsavel_id' => '1',
                 'reservavel_id' => '1',
                 'descricao' => 'Prof. Murilo, sala 31',
                 'inicio' => date($format, strtotime('now')),
