@@ -6,7 +6,7 @@ import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { PageProps } from "@/types";
 import { Head, useForm } from "@inertiajs/react";
-import { ChangeEvent, FormEventHandler, useEffect, useState } from "react";
+import { ChangeEvent, FormEventHandler, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 
 export default function Create({
@@ -47,9 +47,6 @@ export default function Create({
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-
-        // setData("inicio", dateInicio.getTime());
-        // setData("devolucao_prevista", dateDevolucaoPrevista.getTime());
 
         post(route("reservas.store", data));
     };
