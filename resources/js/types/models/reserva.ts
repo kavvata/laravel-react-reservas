@@ -1,9 +1,9 @@
 type Reserva = {
     id: number,
-    reservavel_id: number,
-    user_id: number,
-    inicio: Date,
-    devolucao_prevista: Date,
+    reservavel: Reservavel,
+    responsavel_id: number,
+    inicio: number,
+    devolucao_prevista: number,
     devolucao: Date | undefined,
     descricao: string
 }

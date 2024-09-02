@@ -10,7 +10,6 @@ use App\Repositories\ReservavelRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use Monolog\DateTimeImmutable;
 
 class ReservaController extends Controller
 {
@@ -115,17 +114,80 @@ class ReservaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Reserva $reserva)
+    public function edit(String $id)
     {
-        //
+        $reserva = $this->repository->findByIdWith(['reservavel'], $id);
+        // dd($reserva);
+
+        if (!isset($reserva)) {
+            return '<h2> Edit - Reserva nao encontrada </h2>';
+        }
+
+        $categorias = (new CategoriaRepository)->selectAllWith(['reservaveis']);
+
+        return Inertia::render('Reserva/Edit', [
+            'reserva' => $reserva,
+            'categorias' => $categorias,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Reserva $reserva)
+    public function update(Request $request, string $id)
     {
-        //
+        $dateFormat = 'Y-m-d H:i:s';
+
+        $request->validate([
+            'reservavel_id' => 'required',
+            'inicio' => 'required',
+            'devolucao_prevista' => 'required',
+            'descricao' => 'required|string',
+        ]);
+
+        $reservavel = (new ReservavelRepository)->findById($request->reservavel_id);
+
+        if (!isset($reservavel)) {
+            return '<h2>STORE - Resrvavel nao encontrado </h2>';
+        }
+
+        $user = Auth::user();
+
+        if (!isset($user)) {
+            return '<h2>STORE - Usuario autenticado nao encontrado??? </h2>';
+        }
+
+        $reserva = (new ReservaRepository)->findById($id);
+
+        $reserva->reservavel()->associate($reservavel);
+        $reserva->responsavel()->associate($user);
+
+        $inicioFormatado = $this->removeMilliseconds($request->inicio);
+        $devolucaoPrevistaFormatada = $this->removeMilliseconds($request->devolucao_prevista);
+
+        // $debugDate = [
+        //     'now' => strtotime('now'),
+        //     'inicio' => $this->removeMilliseconds($request->inicio),
+        //     'devolucao_prevista' => $this->removeMilliseconds($request->devolucao_prevista),
+        //     'f_inicio' => date($dateFormat, $inicioFormatado),
+        //     'f_devolucao_prevista' => date($dateFormat, $devolucaoPrevistaFormatada),
+        // ];
+
+        $reserva->inicio = date(
+            $dateFormat,
+            $this->removeMilliseconds($request->inicio)
+        );
+
+        $reserva->devolucao_prevista = date(
+            $dateFormat,
+            $this->removeMilliseconds($request->devolucao_prevista)
+        );
+
+        $reserva->descricao = $request->descricao;
+
+        $reserva->save();
+
+        return to_route('reservas.index');
     }
 
     /**
