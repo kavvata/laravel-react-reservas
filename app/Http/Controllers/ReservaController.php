@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Trait\ValidatesPermission;
 use App\Models\Reserva;
 use App\Repositories\CategoriaRepository;
 use App\Repositories\Repository;
@@ -13,6 +14,8 @@ use Inertia\Inertia;
 
 class ReservaController extends Controller
 {
+    use ValidatesPermission;
+
     protected Repository $repository;
 
     public function __construct()
@@ -30,6 +33,10 @@ class ReservaController extends Controller
      */
     public function index()
     {
+        if (!$this->validaPermissao('ver reservas')) {
+            return '<h2> Reservas - Você não possui autorização para esta ação </h2>';
+        }
+
         return Inertia::render('Reserva/Index', [
             'reservas' => $this->repository->selectAllWith(['reservavel'])
         ]);
@@ -40,6 +47,10 @@ class ReservaController extends Controller
      */
     public function create()
     {
+        if (!$this->validaPermissao('editar reservas')) {
+            return '<h2> Reservas - Você não possui autorização para esta ação </h2>';
+        }
+
         return Inertia::render('Reserva/Create', [
             'categorias' => (new CategoriaRepository)->selectAllWith(['reservaveis']),
         ]);
@@ -50,6 +61,10 @@ class ReservaController extends Controller
      */
     public function store(Request $request)
     {
+        if (!$this->validaPermissao('editar reservas')) {
+            return '<h2> Reservas - Você não possui autorização para esta ação </h2>';
+        }
+
         $dateFormat = 'Y-m-d H:i:s';
 
         $request->validate([
@@ -116,6 +131,10 @@ class ReservaController extends Controller
      */
     public function edit(String $id)
     {
+        if (!$this->validaPermissao('editar reservas')) {
+            return '<h2> Reservas - Você não possui autorização para esta ação </h2>';
+        }
+
         $reserva = $this->repository->findByIdWith(['reservavel'], $id);
         // dd($reserva);
 
@@ -136,6 +155,10 @@ class ReservaController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if (!$this->validaPermissao('editar reservas')) {
+            return '<h2> Reservas - Você não possui autorização para esta ação </h2>';
+        }
+
         $dateFormat = 'Y-m-d H:i:s';
 
         $request->validate([

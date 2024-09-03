@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Trait\ValidatesPermission;
 use App\Models\Reservavel;
 use App\Repositories\CategoriaRepository;
 use App\Repositories\Repository;
@@ -11,6 +12,8 @@ use Inertia\Inertia;
 
 class ReservavelController extends Controller
 {
+    use ValidatesPermission;
+
     protected Repository $repository;
 
     function __construct()
@@ -23,6 +26,11 @@ class ReservavelController extends Controller
      */
     public function index()
     {
+        /* TODO: criar permission 'ver reservaveis' */
+        if (!$this->validaPermissao('editar reservaveis')) {
+            return '<h2> Reservaveis - Você não possui autorização para esta ação </h2>';
+        }
+
         $categoriasComReservaveis = (new CategoriaRepository)->selectAllWith(['reservaveis']);
 
         /* nome do prop na pagina => variavel no laravel */
@@ -34,6 +42,10 @@ class ReservavelController extends Controller
      */
     public function create()
     {
+        if (!$this->validaPermissao('editar reservaveis')) {
+            return '<h2> Reservaveis - Você não possui autorização para esta ação </h2>';
+        }
+
         return Inertia::render('Reservavel/Create', [
             'categorias' => (new CategoriaRepository)->selectAll(),
         ]);
@@ -44,6 +56,10 @@ class ReservavelController extends Controller
      */
     public function store(Request $request)
     {
+        if (!$this->validaPermissao('editar reservaveis')) {
+            return '<h2> Reservaveis - Você não possui autorização para esta ação </h2>';
+        }
+
         $categoria = (new CategoriaRepository)->findById($request->categoria_id);
 
         if (!isset($categoria)) {
@@ -76,6 +92,10 @@ class ReservavelController extends Controller
      */
     public function edit(string $id)
     {
+        if (!$this->validaPermissao('editar reservaveis')) {
+            return '<h2> Reservaveis - Você não possui autorização para esta ação </h2>';
+        }
+
         $reservavel = $this->repository->findByIdWith(['categoria'], $id);
 
         if (!isset($reservavel)) {
@@ -95,6 +115,10 @@ class ReservavelController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if (!$this->validaPermissao('editar reservaveis')) {
+            return '<h2> Reservaveis - Você não possui autorização para esta ação </h2>';
+        }
+
         $reservavel = $this->repository->findById($id);
         $categoria = (new CategoriaRepository)->findById($request->categoria_id);
 
@@ -116,6 +140,8 @@ class ReservavelController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        if (!$this->validaPermissao('remover reservaveis')) {
+            return '<h2> Reservaveis - Você não possui autorização para esta ação </h2>';
+        }
     }
 }

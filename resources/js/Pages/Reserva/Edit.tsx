@@ -41,7 +41,7 @@ export default function Edit({
     }
 
     const { data, setData, patch, processing, errors } = useForm({
-        reservavel_id: reserva.id,
+        reservavel_id: reserva.reservavel.id,
         inicio: new Date(reserva.inicio).getTime(),
         devolucao_prevista: new Date(reserva.devolucao_prevista).getTime(),
         descricao: reserva.descricao,
@@ -119,29 +119,13 @@ export default function Edit({
                                         id="filtro-categoria"
                                         className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                                         onChange={selecionaCategoria}
+                                        defaultValue={categoriaSelecionada.id}
                                     >
-                                        {categorias.map((c) => {
-                                            if (c == categoriaSelecionada) {
-                                                return (
-                                                    <option
-                                                        key={c.id}
-                                                        value={c.id}
-                                                        selected
-                                                    >
-                                                        {c.nome}
-                                                    </option>
-                                                );
-                                            } else {
-                                                return (
-                                                    <option
-                                                        key={c.id}
-                                                        value={c.id}
-                                                    >
-                                                        {c.nome}
-                                                    </option>
-                                                );
-                                            }
-                                        })}
+                                        {categorias.map((c) => (
+                                            <option key={c.id} value={c.id}>
+                                                {c.nome}
+                                            </option>
+                                        ))}
                                     </select>
                                 </div>
                                 <div id="reservaveis-input">
@@ -153,14 +137,12 @@ export default function Edit({
                                         id="reservaveis"
                                         className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                                         onChange={selecionaReservavel}
+                                        defaultValue={data.reservavel_id}
                                     >
                                         {categoriaSelecionada.reservaveis.map(
-                                            (reservavel) => (
-                                                <option
-                                                    key={reservavel.id}
-                                                    value={reservavel.id}
-                                                >
-                                                    {reservavel.nome}
+                                            (r) => (
+                                                <option key={r.id} value={r.id}>
+                                                    {r.nome}
                                                 </option>
                                             ),
                                         )}

@@ -152,6 +152,12 @@ export default function Authenticated({
                             Dashboard
                         </ResponsiveNavLink>
                         <ResponsiveNavLink
+                            href={route("reservas.index")}
+                            active={route().current("reservas.index")}
+                        >
+                            Reservaveis
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
                             href={route("reservaveis.index")}
                             active={route().current("reservaveis.index")}
                         >
